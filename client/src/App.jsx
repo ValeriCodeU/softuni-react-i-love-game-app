@@ -1,5 +1,6 @@
 import { Routes } from "react-router"
 import Header from "./components/header/Header"
+import Footer from "./components/footer/Footer"
 
 function App() {
 
@@ -49,12 +50,10 @@ function App() {
                             </div>
                         </div>
                     </div>
-                    <footer>
-                        <p className="center-text">React Course Exercise @ SoftUni &trade;</p>
-                    </footer>
+
                 </div>
             </section >
-
+            <Footer />
         </>
     )
 }
