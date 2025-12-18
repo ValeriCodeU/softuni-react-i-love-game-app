@@ -1,21 +1,62 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import { useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
+import Swal from "sweetalert2";
+
+const baseUrl = 'http://localhost:3030/jsonstore/games';
 
 export default function Details() {
 
     const { gameId } = useParams();
     const [gameDetails, setGameDetails] = useState({});
+    const navigate = useNavigate();
 
-    useEffect(()=>{
-        fetch(`http://localhost:3030/jsonstore/games/${gameId}`)
-        .then(response => response.json())
-        .then(result => {
-            console.log(result);
-            setGameDetails(result);
-        })
-        .catch(err => alert(err.message))
+    useEffect(() => {
+        fetch(`${baseUrl}/${gameId}`)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result);
+                setGameDetails(result);
+            })
+            .catch(err => alert(err.message))
     }, [gameId]);
+
+    const deleteGameHandler = async () => {
+
+        const result = await Swal.fire({
+            title: "⚠️ Are you sure?",
+            text: `Do you really want to delete: ${gameDetails.title}?`,           
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it",
+            cancelButtonText: "Cancel",
+        });
+
+        if (!result.isConfirmed) {
+            return;
+        }
+
+        try {
+
+            await fetch(`${baseUrl}/${gameId}`, {
+                method: 'DELETE',
+            })
+
+            Swal.fire({
+                title:  "✅ Deleted!",
+                text: `${gameDetails.title} was deleted successfully.`,                     
+            });
+
+            navigate('/games');
+
+
+        } catch (err) {
+
+            Swal.fire({
+                title: "❌ Error!",
+                text: err.message,             
+            });
+        }
+    }
 
     return (
         <section id="game-details">
@@ -46,7 +87,7 @@ export default function Details() {
                     <div className="summary-section">
                         <h2>Summary:</h2>
                         <p className="text-summary">
-                         {gameDetails.summary}
+                            {gameDetails.summary}
                         </p>
                     </div>
                 </div>
@@ -54,8 +95,9 @@ export default function Details() {
 
                 {/* <!-- Edit/Delete buttons ( Only for creator of this game )  --> */}
                 <div className="buttons">
-                    <a href="#" className="button">Edit</a>
-                    <a href="#" className="button">Delete</a>
+                    <Link to="#" className="button">Edit</Link>
+                    {/* <Link to={`games/${gameId}/delete`} className="button">Delete</Link> */}
+                    <button className="button" onClick={deleteGameHandler}>Delete</button>
                 </div>
 
                 <div className="details-comments">
