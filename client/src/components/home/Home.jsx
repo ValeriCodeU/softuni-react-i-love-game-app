@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import Game from "../game/Game";
+import Game from "../game-card/Game-Card";
 
 export default function Home() {
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import Game from "../game/Game";
+import GameCard from "../game-card/Game-Card";
 
 export default function Catalog() {
 
@@ -22,7 +22,7 @@ export default function Catalog() {
 
                 {games.length > 0
                     ?
-                    games.map(g => <Game key={g._id} {...g} />)
+                    games.map(g => <GameCard key={g._id} {...g} />)
                     :
                     <h3 className="no-articles">No Added Games Yet</h3>
                 }
