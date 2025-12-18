@@ -1,5 +1,22 @@
+import { useState } from "react";
+import { useEffect } from "react";
+import Game from "../game/Game";
+
 export default function Home() {
+
+    const [latestGames, setLatestGames] = useState([]);
+
+    useEffect(() => {
+        fetch(`http://localhost:3030/jsonstore/games`)
+            .then(response => response.json())
+            .then(result => {
+                setLatestGames(Object.values(result).sort((a, b) => (b._createdOn - a._createdOn)).slice(0, 3));
+            })
+            .catch(err => alert(err.message))
+    }, []);
+
     return (
+
         <section id="welcome-world">
 
             <div className="welcome-message">
@@ -13,32 +30,15 @@ export default function Home() {
                 <div id="latest-wrap">
                     {/* <!-- Display div: with information about every game (if any) --> */}
                     <div className="home-container">
-                        <div className="game">
-                            <img src="./images/witcher.png" alt="Elden Ring" />
-                            <div className="details-overlay">
-                                <p className="name">The Witcher 3</p>
-                                <p className="genre">Open World</p>
-                                <button className="details-button">Details</button>
-                            </div>
-                        </div>
-                        <div className="game">
-                            <img src="./images/elden ring.png" alt="Elden Ring" />
-                            <div className="details-overlay">
-                                <p className="name">Elden Ring</p>
-                                <p className="genre">Action RPG</p>
-                                <button className="details-button">Details</button>
-                            </div>
-                        </div>
-                        <div className="game">
-                            <img src="./images/minecraft.png" alt="Minecraft" />
-                            <div className="details-overlay">
-                                <p className="name">Minecraft</p>
-                                <p className="genre">Sandbox</p>
-                                <button className="details-button">Details</button>
-                            </div>
-                            {/* <!-- Display paragraph: If there is no games  --> */}
+                        {latestGames.length > 0
+                            ?
+                            latestGames.map(g => <Game key={g._id} {...g} />)
+                            :
                             <p className="no-articles">No games yet</p>
-                        </div>
+                        }
+
+
+
                     </div>
                 </div>
 
