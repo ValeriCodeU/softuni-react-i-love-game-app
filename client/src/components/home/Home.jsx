@@ -1,18 +1,25 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import Game from "../game-card/Game-Card";
+import request from "../../utils/request";
+import Swal from "sweetalert2";
 
 export default function Home() {
 
     const [latestGames, setLatestGames] = useState([]);
 
     useEffect(() => {
-        fetch(`http://localhost:3030/jsonstore/games`)
-            .then(response => response.json())
+        request(`http://localhost:3030/jsonstore/games`)
             .then(result => {
                 setLatestGames(Object.values(result).sort((a, b) => (b._createdOn - a._createdOn)).slice(0, 3));
             })
-            .catch(err => alert(err.message))
+            .catch(err => {
+                Swal.fire({
+                    title: "❌ Error!",
+                    text: err.message,
+                })
+            });
+
     }, []);
 
     return (

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import request from "../../utils/request";
 
 export default function GameCreate() {
 
@@ -17,19 +18,22 @@ export default function GameCreate() {
 
         try {
 
-            const response = await fetch('http://localhost:3030/jsonstore/games', {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
+            const result = await request('http://localhost:3030/jsonstore/games', 'POST', data);
 
-            if (!response.ok) {
-                throw new Error('Failed to create game!');
-            }
+            //version without request service
+            // const response = await fetch('http://localhost:3030/jsonstore/games', {
+            //     method: 'POST',
+            //     headers: {
+            //         'content-type': 'application/json'
+            //     },
+            //     body: JSON.stringify(data)
+            // })
 
-            const result = await response.json();
+            // if (!response.ok) {
+            //     throw new Error('Failed to create game!');
+            // }
+
+            // const result = await response.json();
 
             navigate('/games');
 
@@ -38,10 +42,11 @@ export default function GameCreate() {
                 text: `${result.title} has been created successfully!`,
             });
 
-        } catch (error) {
+        } catch (err) {         
+
             Swal.fire({
                 title: "❌ Error!",
-                text: error.message,
+                text: err.message,
             });
         }
     }

@@ -1,18 +1,24 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import GameCard from "../game-card/Game-Card";
+import request from "../../utils/request";
+import Swal from "sweetalert2";
 
 export default function Catalog() {
 
     const [games, setGames] = useState([]);
 
     useEffect(() => {
-        fetch(`http://localhost:3030/jsonstore/games`)
-            .then(response => response.json())
+        request(`http://localhost:3030/jsonstore/games`)
             .then(result => {
                 setGames(Object.values(result));
             })
-            .catch(err => alert(err.message))
+            .catch(err => {
+                Swal.fire({                    
+                    title: "❌ Error!",
+                    text: err.message,
+                });
+            })
     }, []);
 
     return (

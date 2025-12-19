@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
+import request from "../../utils/request";
 
 const baseUrl = 'http://localhost:3030/jsonstore/games';
 
@@ -12,20 +13,24 @@ export default function Details() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`${baseUrl}/${gameId}`)
-            .then(response => response.json())
+        request(`${baseUrl}/${gameId}`)
             .then(result => {
                 console.log(result);
                 setGameDetails(result);
             })
-            .catch(err => alert(err.message))
+            .catch(err => {
+                Swal.fire({
+                    title: "❌ Error!",
+                    text: err.message,
+                });
+            })
     }, [gameId]);
 
     const deleteGameHandler = async () => {
 
         const result = await Swal.fire({
             title: "⚠️ Are you sure?",
-            text: `Do you really want to delete: ${gameDetails.title}?`,           
+            text: `Do you really want to delete: ${gameDetails.title}?`,
             showCancelButton: true,
             confirmButtonText: "Yes, delete it",
             cancelButtonText: "Cancel",
@@ -37,13 +42,15 @@ export default function Details() {
 
         try {
 
-            await fetch(`${baseUrl}/${gameId}`, {
-                method: 'DELETE',
-            })
+            // await fetch(`${baseUrl}/${gameId}`, {
+            //     method: 'DELETE',
+            // })
+
+            await request(`${baseUrl}/${gameId}`, 'DELETE')
 
             Swal.fire({
-                title:  "✅ Deleted!",
-                text: `${gameDetails.title} was deleted successfully.`,                     
+                title: "✅ Deleted!",
+                text: `${gameDetails.title} was deleted successfully.`,
             });
 
             navigate('/games');
@@ -53,7 +60,7 @@ export default function Details() {
 
             Swal.fire({
                 title: "❌ Error!",
-                text: err.message,             
+                text: err.message,
             });
         }
     }
