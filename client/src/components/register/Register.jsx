@@ -1,7 +1,10 @@
 import { useState } from "react"
 import Swal from "sweetalert2";
 
-export default function Register() {
+export default function Register({
+    user,
+    onRegister
+}) {
 
     const [formData, setFormData] = useState({});
 
@@ -18,12 +21,14 @@ export default function Register() {
             })
         }
 
-        if(password !== confirmPassword) {
-             return Swal.fire({
+        if (password !== confirmPassword) {
+            return Swal.fire({
                 title: "❌ Error!",
                 text: 'Password missmatch!',
             })
         }
+
+        onRegister(email);
 
         console.log('test');
     }
@@ -36,6 +41,7 @@ export default function Register() {
                     <div className="brand-logo"></div>
 
                     <h1>Register</h1>
+                    {user && <h2 style={{ color: 'white', textAlign: 'center' }}>{user.email}</h2>}
 
                     <label htmlFor="email">Email:</label>
                     <input type="email" id="email" name="email" placeholder="Your Email" />
