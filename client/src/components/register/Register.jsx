@@ -1,8 +1,37 @@
+import { useState } from "react"
+import Swal from "sweetalert2";
+
 export default function Register() {
+
+    const [formData, setFormData] = useState({});
+
+    const registerHandler = (data) => {
+
+        const email = data.get('email');
+        const password = data.get('password');
+        const confirmPassword = data.get('confirm-password');
+
+        if (!email || !password) {
+            return Swal.fire({
+                title: "❌ Error!",
+                text: 'Email and password are required!',
+            })
+        }
+
+        if(password !== confirmPassword) {
+             return Swal.fire({
+                title: "❌ Error!",
+                text: 'Password missmatch!',
+            })
+        }
+
+        console.log('test');
+    }
+
     return (
 
         <section id="register-page" className="content auth">
-            <form id="register">
+            <form id="register" action={registerHandler}>
                 <div className="container">
                     <div className="brand-logo"></div>
 
