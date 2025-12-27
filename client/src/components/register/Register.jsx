@@ -1,12 +1,12 @@
 import { useState } from "react"
+import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 
 export default function Register({
-    user,
     onRegister
 }) {
 
-    const [formData, setFormData] = useState({});
+    const navigate = useNavigate();
 
     const registerHandler = (data) => {
 
@@ -29,6 +29,7 @@ export default function Register({
         }
 
         onRegister(email);
+        navigate('/');
 
         console.log('test');
     }
@@ -41,7 +42,8 @@ export default function Register({
                     <div className="brand-logo"></div>
 
                     <h1>Register</h1>
-                    {user && <h2 style={{ color: 'white', textAlign: 'center' }}>{user.email}</h2>}
+                    {/* For test */}
+                    {/* {user && <h2 style={{ color: 'white', textAlign: 'center' }}>{user.email}</h2>} */}
 
                     <label htmlFor="email">Email:</label>
                     <input type="email" id="email" name="email" placeholder="Your Email" />

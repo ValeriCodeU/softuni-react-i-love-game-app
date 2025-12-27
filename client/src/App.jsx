@@ -13,7 +13,7 @@ function App() {
 
     const [user, setUser] = useState(null);
 
-    const registerUserHandler = (email) => {
+    const authUserHandler = (email) => {
         console.log(email);
         setUser({
             email
@@ -28,8 +28,8 @@ function App() {
 
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/register" element={<Register user={user} onRegister={registerUserHandler} />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register onRegister={authUserHandler} />} />
+                <Route path="/login" element={<Login onLogin={authUserHandler} />} />
                 <Route path="/games" element={<Catalog />} />
                 <Route path="/games/:gameId/details/" element={< Details />} />
                 <Route path="/games/create" element={<GameCreate />} />
