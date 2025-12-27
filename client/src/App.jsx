@@ -7,6 +7,7 @@ import Details from "./components/details/Details"
 import GameCreate from "./components/game-create/GameCreate"
 import Register from "./components/register/Register"
 import { useState } from "react"
+import Login from "./components/login/Login"
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/register" element={<Register user={user} onRegister={registerUserHandler} />} />
+                <Route path="/login" element={<Login />} />
                 <Route path="/games" element={<Catalog />} />
                 <Route path="/games/:gameId/details/" element={< Details />} />
                 <Route path="/games/create" element={<GameCreate />} />
