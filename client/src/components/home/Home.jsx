@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import Game from "../game-card/Game-Card";
+import GameCard from "../game-card/GameCard";
 import request from "../../utils/request";
 import Swal from "sweetalert2";
 
@@ -39,7 +39,7 @@ export default function Home() {
                     <div className="home-container">
                         {latestGames.length > 0
                             ?
-                            latestGames.map(g => <Game key={g._id} {...g} />)
+                            latestGames.map(g => <GameCard key={g._id} {...g} />)
                             :
                             <p className="no-articles">No games yet</p>
                         }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import GameCard from "../game-card/Game-Card";
+import GameCard from "../game-card/GameCard";
 import request from "../../utils/request";
 import Swal from "sweetalert2";
 
