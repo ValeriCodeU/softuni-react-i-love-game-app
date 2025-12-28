@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import request from "../../utils/request";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
 
 
@@ -20,6 +20,7 @@ export default function GameEdit() {
 
     const [formdData, setFormData] = useState(initialValues);
     const { gameId } = useParams();
+    const navigate = useNavigate();
 
     const changeHandler = (e) => {
         setFormData((state) => ({
@@ -44,9 +45,29 @@ export default function GameEdit() {
 
     }, [gameId]);
 
+    const editGameHandler = async () => {
+
+        try {
+            const result = await request(`${baseUrl}/${gameId}`, 'PUT', formdData);
+
+            await Swal.fire({
+                title: "✅ Success!",
+                text: `${result.title} has been created successfully!`,
+            });
+
+            navigate(`/games/${gameId}/details`);
+
+        } catch (err) {
+            Swal.fire({
+                title: "❌ Error!",
+                text: err.message,
+            });
+        }
+    }
+
     return (
         <section id="edit-page">
-            <form id="add-new-game">
+            <form id="add-new-game" action={editGameHandler}>
                 <div className="container">
 
                     <h1>Edit Game</h1>
