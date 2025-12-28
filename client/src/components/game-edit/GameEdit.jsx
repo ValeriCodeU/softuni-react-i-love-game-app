@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import request from "../../utils/request";
+import { useParams } from "react-router";
+import Swal from "sweetalert2";
 
 
 const initialValues = {
@@ -11,9 +14,12 @@ const initialValues = {
 
 }
 
+const baseUrl = 'http://localhost:3030/jsonstore/games';
+
 export default function GameEdit() {
 
     const [formdData, setFormData] = useState(initialValues);
+    const { gameId } = useParams();
 
     const changeHandler = (e) => {
         setFormData((state) => ({
@@ -21,6 +27,22 @@ export default function GameEdit() {
             [e.target.name]: e.target.value
         }));
     }
+
+    useEffect(() => {
+
+        request(`${baseUrl}/${gameId}`)
+            .then(result => {
+                console.log(result);
+                setFormData(result);
+            })
+            .catch(err => {
+                Swal.fire({
+                    title: "❌ Error!",
+                    text: err.message,
+                });
+            })
+
+    }, [gameId]);
 
     return (
         <section id="edit-page">
