@@ -9,6 +9,7 @@ import Register from "./components/register/Register"
 import { useState } from "react"
 import Login from "./components/login/Login"
 import Logout from "./components/logout/Logout"
+import GameEdit from "./components/game-edit/GameEdit"
 
 function App() {
 
@@ -56,8 +57,9 @@ function App() {
                 <Route path="/login" element={<Login onLogin={loginHandler} />} />
                 <Route path="/logout" element={<Logout onLogout={logoutHandler}/>} />
                 <Route path="/games" element={<Catalog />} />
-                <Route path="/games/:gameId/details/" element={< Details />} />
+                <Route path="/games/:gameId/details/" element={< Details user={user} />} />
                 <Route path="/games/create" element={<GameCreate />} />
+                <Route path="/games/edit" element={<GameEdit />} />
 
             </Routes>
 
