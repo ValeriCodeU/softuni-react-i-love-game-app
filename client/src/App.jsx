@@ -59,7 +59,7 @@ function App() {
                 <Route path="/games" element={<Catalog />} />
                 <Route path="/games/:gameId/details/" element={< Details user={user} />} />
                 <Route path="/games/create" element={<GameCreate />} />
-                <Route path="/games/edit" element={<GameEdit />} />
+                <Route path="/games/:gameId/edit" element={<GameEdit />} />
 
             </Routes>
 
