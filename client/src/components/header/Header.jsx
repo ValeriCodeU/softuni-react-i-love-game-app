@@ -16,11 +16,10 @@ export default function Header({
                     <Link to="logout">Logout</Link>
                 </div>
                 {/* <!-- Guest users --> */}
-                <div id="guest">
+                {!user && <div id="guest">
                     <Link to="/login">Login</Link>
                     <Link to="/register">Register</Link>
-                </div>
-
+                </div>}
             </nav>
             <div>
                 <p style={{ color: 'white', textAlign: 'end' }}>{user?.email}</p>
