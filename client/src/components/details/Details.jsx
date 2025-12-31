@@ -112,10 +112,11 @@ export default function Details({
                         <button className="button" onClick={deleteGameHandler}>Delete</button>
                     </div>
                 }
-            <GameDetailsComments />
-               
+                <GameDetailsComments />
+
             </div>
-            <CreateComment user={user}/>
+            {user &&
+                <CreateComment user={user} />}
         </section>
     );
 }

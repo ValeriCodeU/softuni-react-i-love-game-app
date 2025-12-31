@@ -11,7 +11,7 @@ export default function GameDetailsComments() {
                 </li>
             </ul>
             {/* <!-- Display paragraph: If there are no games in the database --> */}
-            <p className="no-comment">No comments.</p>
+            {/* <p className="no-comment">No comments.</p> */}
         </div>
 
     );
