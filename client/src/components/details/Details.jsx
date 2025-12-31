@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
 import request from "../../utils/request";
+import CreateComment from "../create-comment/CreateComment";
 
 const baseUrl = 'http://localhost:3030/jsonstore/games';
 
@@ -126,14 +127,7 @@ export default function Details({
                 </div>
 
             </div>
-            {/* <!-- Add Comment ( Only for logged-in users, which is not creators of the current game ) --> */}
-            <article className="create-comment">
-                <label>Add new comment:</label>
-                <form className="form">
-                    <textarea name="comment" placeholder="Comment......"></textarea>
-                    <input className="btn submit" type="submit" value="Add Comment" />
-                </form>
-            </article>
+            <CreateComment />
         </section>
     );
 }
