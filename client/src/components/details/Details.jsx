@@ -115,7 +115,7 @@ export default function Details({
             <GameDetailsComments />
                
             </div>
-            <CreateComment />
+            <CreateComment user={user}/>
         </section>
     );
 }

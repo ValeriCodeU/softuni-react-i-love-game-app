@@ -44,7 +44,7 @@ export default function GameCreate() {
 
         } catch (err) {         
 
-            Swal.fire({
+            await Swal.fire({
                 title: "❌ Error!",
                 text: err.message,
             });
