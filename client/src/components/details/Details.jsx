@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
 import request from "../../utils/request";
 import CreateComment from "../create-comment/CreateComment";
+import GameDetailsComments from "../game-details-comments/GameDetailsComments";
 
 const baseUrl = 'http://localhost:3030/jsonstore/games';
 
@@ -111,21 +112,8 @@ export default function Details({
                         <button className="button" onClick={deleteGameHandler}>Delete</button>
                     </div>
                 }
-
-                <div className="details-comments">
-                    <h2>Comments:</h2>
-                    <ul>
-                        <li className="comment">
-                            <p>Content: A masterpiece of world design, though the boss fights are brutal.</p>
-                        </li>
-                        <li className="comment">
-                            <p>Content: Truly feels like a next-gen evolution of the Souls formula!</p>
-                        </li>
-                    </ul>
-                    {/* <!-- Display paragraph: If there are no games in the database --> */}
-                    <p className="no-comment">No comments.</p>
-                </div>
-
+            <GameDetailsComments />
+               
             </div>
             <CreateComment />
         </section>
