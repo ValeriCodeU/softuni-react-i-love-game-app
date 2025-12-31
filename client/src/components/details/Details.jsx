@@ -7,6 +7,8 @@ import CreateComment from "../create-comment/CreateComment";
 import GameDetailsComments from "../game-details-comments/GameDetailsComments";
 
 const baseUrl = 'http://localhost:3030/jsonstore/games';
+const commentsUrl = 'http://localhost:3030/jsonstore/comments';
+
 
 export default function Details({
     user
@@ -14,6 +16,8 @@ export default function Details({
 
     const { gameId } = useParams();
     const [gameDetails, setGameDetails] = useState({});
+    const [comments, setComments] = useState([]);
+    const [refresh, setRefresh] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -29,6 +33,25 @@ export default function Details({
                 });
             })
     }, [gameId]);
+
+    useEffect(() => {
+        request(`${commentsUrl}`)
+            .then(result => {
+                console.log(result);
+                setComments(Object.values(result).filter(c => c.gameId === gameId));
+            })
+            .catch(err => {
+                Swal.fire({
+                    title: "❌ Error!",
+                    text: err.message,
+                });
+            })
+    }, [gameId, refresh]);
+
+    const forceRefresh = () => {
+        setRefresh(state => !state);
+    }
+
 
     const deleteGameHandler = async () => {
 
@@ -112,11 +135,11 @@ export default function Details({
                         <button className="button" onClick={deleteGameHandler}>Delete</button>
                     </div>
                 }
-                <GameDetailsComments />
+                <GameDetailsComments comments={comments} />
 
             </div>
             {user &&
-                <CreateComment user={user} />}
+                <CreateComment refreshComments={forceRefresh} user={user} />}
         </section>
     );
 }

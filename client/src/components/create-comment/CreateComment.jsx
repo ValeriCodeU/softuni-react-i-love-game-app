@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 
 export default function CreateComment({
     user,
+    refreshComments,
 }) {
 
     const [comment, setComment] = useState('');
@@ -24,8 +25,10 @@ export default function CreateComment({
                 commentText: comment,
                 gameId,
             });
-
+            
+            refreshComments();
             setComment('');
+           
 
             Swal.fire({
                 title: "✅ Success!",
