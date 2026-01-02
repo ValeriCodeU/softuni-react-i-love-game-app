@@ -16,6 +16,8 @@ function App() {
     const [registeredUsers, setRegisteredUsers] = useState([]);
     const [user, setUser] = useState(null);
 
+    console.log(import.meta.env.VITE_FIREBASE_PROJECT_ID);
+
     const registerHandler = (email, password) => {
         console.log(email);
 
