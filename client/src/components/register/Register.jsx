@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import useForm from "../../hooks/useForm";
 
 export default function Register({
     onRegister
@@ -7,11 +8,41 @@ export default function Register({
 
     const navigate = useNavigate();
 
-    const registerHandler = (data) => {
+    // const registerHandler = (data) => {
 
-        const email = data.get('email');
-        const password = data.get('password');
-        const confirmPassword = data.get('confirm-password');
+    //     const email = data.get('email');
+    //     const password = data.get('password');
+    //     const confirmPassword = data.get('confirm-password');
+
+    //     if (!email || !password) {
+    //         return Swal.fire({
+    //             title: "❌ Error!",
+    //             text: 'Email and password are required!',
+    //         })
+    //     }
+
+    //     if (password !== confirmPassword) {
+    //         return Swal.fire({
+    //             title: "❌ Error!",
+    //             text: 'Password missmatch!',
+    //         })
+    //     }
+    //     try {
+    //         onRegister(email, password);
+    //         navigate('/');
+
+    //     } catch (error) {
+    //         Swal.fire({
+    //             title: "❌ Error!",
+    //             text: error.message,
+    //         })
+    //     }
+
+    //     console.log('test');
+    // }
+
+    const registerHandler = async (data) => {
+        const { email, password, confirmPassword } = data;
 
         if (!email || !password) {
             return Swal.fire({
@@ -26,24 +57,24 @@ export default function Register({
                 text: 'Password missmatch!',
             })
         }
-        try {
-            onRegister(email, password);
-            navigate('/');
 
-        } catch (error) {
-            Swal.fire({
-                title: "❌ Error!",
-                text: error.message,
-            })
-        }
-
-        console.log('test');
+        onRegister(email, password);
+        navigate('/');
     }
+
+    const {
+        formAction,    
+        register
+    } = useForm(registerHandler, {
+        email: '',
+        password: '',
+        confirmPassword: '',
+    });
 
     return (
 
         <section id="register-page" className="content auth">
-            <form id="register" action={registerHandler}>
+            <form id="register" action={formAction}>
                 <div className="container">
                     <div className="brand-logo"></div>
 
@@ -52,13 +83,13 @@ export default function Register({
                     {/* {user && <h2 style={{ color: 'white', textAlign: 'center' }}>{user.email}</h2>} */}
 
                     <label htmlFor="email">Email:</label>
-                    <input type="email" id="email" name="email" placeholder="Your Email" />
+                    <input type="email" id="email" {...register('email')} placeholder="Your Email" />
 
                     <label htmlFor="pass">Password:</label>
-                    <input type="password" name="password" id="register-password" placeholder="Password" />
+                    <input type="password" {...register('password')} id="register-password" placeholder="Password" />
 
                     <label htmlFor="con-pass">Confirm Password:</label>
-                    <input type="password" name="confirm-password" id="confirm-password" placeholder="Repeat Password" />
+                    <input type="password" {...register('confirmPassword')} id="confirm-password" placeholder="Repeat Password" />
 
                     <input className="btn submit" type="submit" value="Register" />
 
