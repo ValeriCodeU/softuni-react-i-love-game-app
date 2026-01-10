@@ -58,12 +58,20 @@ export default function Register({
             })
         }
 
-        onRegister(email, password);
-        navigate('/');
-    }
+            try {
+                await onRegister(email, password);
+                navigate('/');
+
+            } catch (error) {
+                Swal.fire({
+                    title: "❌ Error!",
+                    text: error.message,
+                })
+            }
+            console.log('test');    }
 
     const {
-        formAction,    
+        formAction,
         register
     } = useForm(registerHandler, {
         email: '',

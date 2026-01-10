@@ -13,30 +13,33 @@ import GameEdit from "./components/game-edit/GameEdit"
 
 function App() {
 
-    const [registeredUsers, setRegisteredUsers] = useState([]);
     const [user, setUser] = useState(null);
 
     console.log(import.meta.env.VITE_FIREBASE_PROJECT_ID);
 
-    const registerHandler = (email, password) => {
+    const registerHandler = async (email, password) => {
         console.log(email);
-
-        if (registeredUsers.some(user => user.email === email)) {
-
-            throw new Error('Email is taken!');
-
-        }
 
         const newUser = { email, password };
 
-        setRegisteredUsers((state) => ([...state, newUser]));
 
-        setUser(newUser);
+        const response = await fetch('http://localhost:3030/users/register', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(newUser)
+        });
+
+        const result = await response.json();
+
+        setUser(result);
+
+        console.log(result);
     }
 
     const loginHandler = (email, password) => {
 
-        const user = registeredUsers.find(u => u.email === email && u.password === password)
         if (!user) {
             throw new Error('Invalid email or password!');
         }
@@ -57,7 +60,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/register" element={<Register onRegister={registerHandler} />} />
                 <Route path="/login" element={<Login onLogin={loginHandler} />} />
-                <Route path="/logout" element={<Logout onLogout={logoutHandler}/>} />
+                <Route path="/logout" element={<Logout onLogout={logoutHandler} />} />
                 <Route path="/games" element={<Catalog />} />
                 <Route path="/games/:gameId/details/" element={< Details user={user} />} />
                 <Route path="/games/create" element={<GameCreate />} />
