@@ -1,12 +1,14 @@
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import useForm from "../../hooks/useForm";
+import { useContext } from "react";
+import UserContext from "../../contexts/UserContext";
 
-export default function Register({
-    onRegister
-}) {
+export default function Register() {
 
     const navigate = useNavigate();
+
+    const { registerHandler } = useContext(UserContext);
 
     // const registerHandler = (data) => {
 
@@ -41,7 +43,7 @@ export default function Register({
     //     console.log('test');
     // }
 
-    const registerHandler = async (data) => {
+    const registerSubmitHandler = async (data) => {
         const { email, password, confirmPassword } = data;
 
         if (!email || !password) {
@@ -58,22 +60,23 @@ export default function Register({
             })
         }
 
-            try {
-                await onRegister(email, password);
-                navigate('/');
+        try {
+            await registerHandler(email, password);
+            navigate('/');
 
-            } catch (error) {
-                Swal.fire({
-                    title: "❌ Error!",
-                    text: error.message,
-                })
-            }
-            console.log('test');    }
+        } catch (error) {
+            Swal.fire({
+                title: "❌ Error!",
+                text: error.message,
+            })
+        }
+        console.log('test');
+    }
 
     const {
         formAction,
         register
-    } = useForm(registerHandler, {
+    } = useForm(registerSubmitHandler, {
         email: '',
         password: '',
         confirmPassword: '',
