@@ -47,8 +47,8 @@ export function UserProvider(props) {
 
     const logoutHandler = async () => {
 
-        await request('/users/logout');
-        // setUser(null);
+        await request('/users/logout', null, null, { accessToken: user.accessToken });
+        setUser(null);
 
     }
 
@@ -66,7 +66,7 @@ export function UserProvider(props) {
     return (
 
         <UserContext.Provider value={userContextValue}>
-            {props.children }
+            {props.children}
         </UserContext.Provider>
 
     );

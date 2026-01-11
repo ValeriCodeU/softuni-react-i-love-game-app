@@ -1,7 +1,13 @@
+import { useContext } from "react";
+import UserContext from "../contexts/UserContext";
+
 const baseUrl = 'http://localhost:3030';
 
 export default function useRequest() {
-    const request = async (url, method, data) => {
+
+    const { user, isAuthenticated } = useContext(UserContext);
+
+    const request = async (url, method, data, config = {}) => {
         const options = {};
 
         if (method) {
@@ -13,6 +19,15 @@ export default function useRequest() {
             options.headers = {
                 'content-type': 'application/json'
             };
+        }
+
+        console.log(config.accessToken);
+
+        if (config.accessToken || isAuthenticated) {
+            options.headers = {
+                ...options.headers,
+                'X-Authorization': config.accessToken || user.accessToken
+            }
         }
 
 
