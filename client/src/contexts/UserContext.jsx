@@ -45,10 +45,13 @@ export function UserProvider(props) {
         setUser(result);
     }
 
-    const logoutHandler = async () => {
+    const logoutHandler = () => {
 
-        await request('/users/logout', null, null, { accessToken: user.accessToken });
-        setUser(null);
+        return request('/users/logout', null, null, { accessToken: user.accessToken })
+            .finally(() => setUser(null));
+
+        // await request('/users/logout', { accessToken: user.accessToken });
+        // setUser(null);
 
     }
 
