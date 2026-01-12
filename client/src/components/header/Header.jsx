@@ -1,8 +1,11 @@
 import { Link } from "react-router";
+import { useUserContext } from "../../contexts/UserContext";
 
-export default function Header({
-    user
-}) {
+export default function Header() {
+
+
+    const { user, isAuthenticated } = useUserContext();
+
     return (
 
         <header>
@@ -11,14 +14,14 @@ export default function Header({
                 <Link className="home" to="/"> <img src="./images/logo.png" alt="logo" /> </Link>
                 <Link to="/games">Catalog</Link>
                 {/* <!-- Logged-in users --> */}
-                {user &&
+                {isAuthenticated &&
                     <div id="user">
                         <Link to="/games/create">Add Game</Link>
                         <Link to="/logout">Logout</Link>
                     </div>}
 
                 {/* <!-- Guest users --> */}
-                {!user &&
+                {!isAuthenticated &&
                     <div id="guest">
                         <Link to="/login">Login</Link>
                         <Link to="/register">Register</Link>
