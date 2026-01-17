@@ -1,11 +1,13 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import UserContext from "../contexts/UserContext";
+import Swal from "sweetalert2";
 
 const baseUrl = 'http://localhost:3030';
 
-export default function useRequest() {
+export default function useRequest(url, initialValues) {
 
     const { user, isAuthenticated } = useContext(UserContext);
+    const [data, setData] = useState(initialValues);
 
     const request = async (url, method, data, config = {}) => {
         const options = {};
@@ -47,5 +49,21 @@ export default function useRequest() {
         return result;
     }
 
-    return { request }
+    useEffect(() => {
+        if (!url) return;
+
+        request(url, 'GET')
+            .then(data => {
+                setData(data);
+            })
+            .catch(err => {
+                console.error('Error fetching data:', err);
+                Swal.fire({
+                    title: "❌ Error!",
+                    text: err.message,
+                });
+            });
+    }, [url]);
+
+    return { request, data }
 }
