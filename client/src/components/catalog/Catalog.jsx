@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import GameCard from "../game-card/GameCard";
-import request from "../../utils/request";
 import Swal from "sweetalert2";
-
+import useRequest from "../../hooks/useRequest";
 export default function Catalog() {
 
     const [games, setGames] = useState([]);
+    const { request } = useRequest();
 
     useEffect(() => {
-        request(`http://localhost:3030/jsonstore/games`)
+        request(`/data/games`)
             .then(result => {
-                setGames(Object.values(result));
+                setGames(result);
             })
             .catch(err => {
                 Swal.fire({                    

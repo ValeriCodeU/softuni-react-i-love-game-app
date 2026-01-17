@@ -20,10 +20,7 @@ export default function GameCreate() {
 
     const createGameHander = async (values) => {
 
-        console.log('test');
-
-
-
+      
         const { image, ...game } = values;
 
         game.imageUrl = image;
