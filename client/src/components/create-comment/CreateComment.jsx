@@ -1,34 +1,35 @@
-import { useState } from "react";
-import request from "../../utils/request";
 import { useParams } from "react-router";
 import Swal from "sweetalert2";
+import useRequest from "../../hooks/useRequest";
+import useForm from "../../hooks/useForm";
 
 export default function CreateComment({
     user,
     refreshComments,
 }) {
 
-    const [comment, setComment] = useState('');
+    // const [comment, setComment] = useState('');
     const { gameId } = useParams();
+    const { request } = useRequest();
 
-    const changeHandler = (e) => {
+    // const changeHandler = (e) => {
 
-        setComment(e.target.value);
-    }
+    //     setComment(e.target.value);
+    // }
 
 
-    const submitHandler = async () => {
+    const submitHandler = async (data) => {
 
         try {
-            await request('http://localhost:3030/jsonstore/comments', 'POST', {
-                author: user.email,
-                commentText: comment,
+            await request('/data/comments', 'POST', {
+                // author: user.email, // jsonstore practise server
+                commentText: data.comment,
                 gameId,
             });
-            
+
             refreshComments();
-            setComment('');
-           
+            // setComment('');
+
 
             Swal.fire({
                 title: "✅ Success!",
@@ -45,15 +46,17 @@ export default function CreateComment({
 
     }
 
+    const { register, formAction } = useForm(submitHandler, {
+        comment: '',
+    });
+
     return (
 
         <article className="create-comment" >
             <label>Add new comment:</label>
-            <form className="form" action={submitHandler}>
+            <form className="form" action={formAction}>
                 <textarea
-                    name="comment"
-                    value={comment}
-                    onChange={changeHandler}
+                    {...register("comment")}
                     disabled={!user}
                     placeholder="Comment......">
                 </textarea>
