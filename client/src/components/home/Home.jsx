@@ -1,26 +1,32 @@
-import { useState } from "react";
-import { useEffect } from "react";
+import useRequest from "../../hooks/useRequest";
 import GameCard from "../game-card/GameCard";
-import request from "../../utils/request";
 import Swal from "sweetalert2";
 
 export default function Home() {
 
-    const [latestGames, setLatestGames] = useState([]);
+    const params = new URLSearchParams();
+    params.append('sortBy', '_createdOn desc');
+    params.append('pageSize', '3');
 
-    useEffect(() => {
-        request(`http://localhost:3030/jsonstore/games`)
-            .then(result => {
-                setLatestGames(Object.values(result).sort((a, b) => (b._createdOn - a._createdOn)).slice(0, 3));
-            })
-            .catch(err => {
-                Swal.fire({
-                    title: "❌ Error!",
-                    text: err.message,
-                })
-            });
+    const query = params.toString().replace(/\+/g, '%20');
 
-    }, []);
+    const { data: latestGames } = useRequest(`/data/games?${query}`, []);
+
+    // const [latestGames, setLatestGames] = useState([]);
+
+    // useEffect(() => {
+    //     request(`http://localhost:3030/jsonstore/games`)
+    //         .then(result => {
+    //             setLatestGames(Object.values(result).sort((a, b) => (b._createdOn - a._createdOn)).slice(0, 3));
+    //         })
+    //         .catch(err => {
+    //             Swal.fire({
+    //                 title: "❌ Error!",
+    //                 text: err.message,
+    //             })
+    //         });
+
+    // }, []);
 
     return (
 
