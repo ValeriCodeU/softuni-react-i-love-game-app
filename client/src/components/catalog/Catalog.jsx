@@ -1,25 +1,22 @@
-import { useState } from "react";
-import { useEffect } from "react";
 import GameCard from "../game-card/GameCard";
-import Swal from "sweetalert2";
 import useRequest from "../../hooks/useRequest";
 export default function Catalog() {
 
-    const [games, setGames] = useState([]);
-    const { request } = useRequest();
+    // const [games, setGames] = useState([]);
+    const { data: games } = useRequest('/data/games', []);
 
-    useEffect(() => {
-        request(`/data/games`)
-            .then(result => {
-                setGames(result);
-            })
-            .catch(err => {
-                Swal.fire({                    
-                    title: "❌ Error!",
-                    text: err.message,
-                });
-            })
-    }, []);
+    // useEffect(() => {
+    //     request(`/data/games`)
+    //         .then(result => {
+    //             setGames(result);
+    //         })
+    //         .catch(err => {
+    //             Swal.fire({                    
+    //                 title: "❌ Error!",
+    //                 text: err.message,
+    //             });
+    //         })
+    // }, []);
 
     return (
         <section id="catalog-page">
