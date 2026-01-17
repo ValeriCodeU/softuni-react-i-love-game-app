@@ -6,16 +6,16 @@ import request from "../../utils/request";
 import CreateComment from "../create-comment/CreateComment";
 import GameDetailsComments from "../game-details-comments/GameDetailsComments";
 import useRequest from "../../hooks/useRequest";
+import { useUserContext } from "../../contexts/UserContext";
 
 // const baseUrl = 'http://localhost:3030/jsonstore/games';
 // const commentsUrl = 'http://localhost:3030/jsonstore/comments';
 
 
-export default function Details({
-    user
-}) {
+export default function Details() {
 
     const { gameId } = useParams();
+    const { user, isAuthenticated } = useUserContext();
     // const [gameDetails, setGameDetails] = useState({});
     const [comments, setComments] = useState([]);
     const [refresh, setRefresh] = useState(false);
@@ -130,7 +130,7 @@ export default function Details({
 
 
                 {/* <!-- Edit/Delete buttons ( Only for creator of this game )  --> */}
-                {user &&
+                {isAuthenticated &&
                     <div className="buttons">
                         <Link to={`/games/${gameId}/edit`} className="button">Edit</Link>
                         {/* <Link to={`games/${gameId}/delete`} className="button">Delete</Link> */}
@@ -140,7 +140,7 @@ export default function Details({
                 <GameDetailsComments comments={comments} />
 
             </div>
-            {user &&
+            {isAuthenticated &&
                 <CreateComment refreshComments={forceRefresh} user={user} />}
         </section>
     );
