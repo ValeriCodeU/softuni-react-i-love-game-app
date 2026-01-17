@@ -25,7 +25,7 @@ export default function GameCreate() {
 
         game.imageUrl = image;
         game.players = Number(game.players);
-        game._createdOn = Date.now();
+        // game._createdOn = Date.now();
 
         try {
 
