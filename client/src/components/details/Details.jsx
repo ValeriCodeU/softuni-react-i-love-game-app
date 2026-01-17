@@ -5,9 +5,10 @@ import Swal from "sweetalert2";
 import request from "../../utils/request";
 import CreateComment from "../create-comment/CreateComment";
 import GameDetailsComments from "../game-details-comments/GameDetailsComments";
+import useRequest from "../../hooks/useRequest";
 
-const baseUrl = 'http://localhost:3030/jsonstore/games';
-const commentsUrl = 'http://localhost:3030/jsonstore/comments';
+// const baseUrl = 'http://localhost:3030/jsonstore/games';
+// const commentsUrl = 'http://localhost:3030/jsonstore/comments';
 
 
 export default function Details({
@@ -15,27 +16,28 @@ export default function Details({
 }) {
 
     const { gameId } = useParams();
-    const [gameDetails, setGameDetails] = useState({});
+    // const [gameDetails, setGameDetails] = useState({});
     const [comments, setComments] = useState([]);
     const [refresh, setRefresh] = useState(false);
     const navigate = useNavigate();
+    const { data: gameDetails, request } = useRequest(`/data/games/${gameId}`, {});
+
+    // useEffect(() => {
+    //     request(`${baseUrl}/${gameId}`)
+    //         .then(result => {
+    //             console.log(result);
+    //             setGameDetails(result);
+    //         })
+    //         .catch(err => {
+    //             Swal.fire({
+    //                 title: "❌ Error!",
+    //                 text: err.message,
+    //             });
+    //         })
+    // }, [gameId]);
 
     useEffect(() => {
-        request(`${baseUrl}/${gameId}`)
-            .then(result => {
-                console.log(result);
-                setGameDetails(result);
-            })
-            .catch(err => {
-                Swal.fire({
-                    title: "❌ Error!",
-                    text: err.message,
-                });
-            })
-    }, [gameId]);
-
-    useEffect(() => {
-        request(`${commentsUrl}`)
+        request('/data/comments')
             .then(result => {
                 console.log(result);
                 setComments(Object.values(result).filter(c => c.gameId === gameId));
@@ -73,7 +75,7 @@ export default function Details({
             //     method: 'DELETE',
             // })
 
-            await request(`${baseUrl}/${gameId}`, 'DELETE')
+            await request(`/data/games/${gameId}`, 'DELETE')
 
             Swal.fire({
                 title: "✅ Deleted!",
