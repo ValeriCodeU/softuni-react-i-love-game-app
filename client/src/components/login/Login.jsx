@@ -13,8 +13,6 @@ export default function Login() {
 
         const { email, password } = data;
 
-        console.log(email);
-
         if (!email || !password) {
             return Swal.fire({
                 title: "❌ Error!",
@@ -54,10 +52,10 @@ export default function Login() {
                 <div className="container">
                     <h1>Login</h1>
                     <label htmlFor="email">Email</label>
-                    <input type="email" id="email" {...register('email')} placeholder="Your Email" />
+                    <input type="email" id="email" {...register("email")} placeholder="Your Email" />
 
                     <label htmlFor="login-pass">Password</label>
-                    <input type="password" id="login-password" {...register('password')} placeholder="Password" />
+                    <input type="password" id="login-password" {...register("password")} placeholder="Password" />
                     <input type="submit" className="btn submit" value="Login" />
                 </div>
             </form>

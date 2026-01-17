@@ -40,14 +40,19 @@ export function UserProvider(props) {
 
         const result = await request('/users/login', 'POST', { email, password });
 
-        console.log(user);
-
         setUser(result);
     }
 
     const logoutHandler = () => {
 
-        return request('/users/logout', null, null, { accessToken: user.accessToken })
+        const token = user.accessToken;
+
+        // if(!token){
+        //     setUser(null);
+        //     return Promise.resolve();
+        // }
+
+        return request('/users/logout', null, null, { accessToken: token })
             .finally(() => setUser(null));
 
         // await request('/users/logout', { accessToken: user.accessToken });
