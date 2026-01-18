@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import request from "../../utils/request";
 import { useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
+import useForm from "../../hooks/useForm";
+import useRequest from "../../hooks/useRequest";
 
 
 const initialValues = {
@@ -14,41 +16,14 @@ const initialValues = {
 
 }
 
-const baseUrl = 'http://localhost:3030/jsonstore/games';
+// const baseUrl = 'http://localhost:3030/jsonstore/games';
 
 export default function GameEdit() {
 
-    const [formdData, setFormData] = useState(initialValues);
-    const { gameId } = useParams();
-    const navigate = useNavigate();
-
-    const changeHandler = (e) => {
-        setFormData((state) => ({
-            ...state,
-            [e.target.name]: e.target.value
-        }));
-    }
-
-    useEffect(() => {
-
-        request(`${baseUrl}/${gameId}`)
-            .then(result => {
-                console.log(result);
-                setFormData(result);
-            })
-            .catch(err => {
-                Swal.fire({
-                    title: "❌ Error!",
-                    text: err.message,
-                });
-            })
-
-    }, [gameId]);
-
-    const editGameHandler = async () => {
+    const editGameHandler = async (formData) => {
 
         try {
-            const result = await request(`${baseUrl}/${gameId}`, 'PUT', formdData);
+            const result = await request(`/data/games/${gameId}`, 'PUT', formData);
 
             await Swal.fire({
                 title: "✅ Success!",
@@ -65,9 +40,41 @@ export default function GameEdit() {
         }
     }
 
+    const { register, formAction, setValues } = useForm(editGameHandler, initialValues);
+
+    // const [formdData, setFormData] = useState(initialValues);
+    const { gameId } = useParams();
+    const navigate = useNavigate();
+    const { request } = useRequest();
+
+    // const changeHandler = (e) => {
+    //     setFormData((state) => ({
+    //         ...state,
+    //         [e.target.name]: e.target.value
+    //     }));
+    // }
+
+    useEffect(() => {
+
+        request(`/data/games/${gameId}`)
+            .then(result => {
+                console.log(result);
+                setValues(result);
+            })
+            .catch(err => {
+                Swal.fire({
+                    title: "❌ Error!",
+                    text: err.message,
+                });
+            })
+
+    }, [gameId, setValues]);
+
+
+
     return (
         <section id="edit-page">
-            <form id="add-new-game" action={editGameHandler}>
+            <form id="add-new-game" action={formAction}>
                 <div className="container">
 
                     <h1>Edit Game</h1>
@@ -77,9 +84,7 @@ export default function GameEdit() {
                         <input
                             type="text"
                             id="gameName"
-                            name="title"
-                            value={formdData.title}
-                            onChange={changeHandler}
+                            {...register("title")}
                             placeholder="Enter game title..."
                         />
                     </div>
@@ -89,9 +94,7 @@ export default function GameEdit() {
                         <input
                             type="text"
                             id="genre"
-                            name="genre"
-                            value={formdData.genre}
-                            onChange={changeHandler}
+                            {...register("genre")}
                             placeholder="Enter game genre..."
                         />
                     </div>
@@ -101,9 +104,7 @@ export default function GameEdit() {
                         <input
                             type="number"
                             id="activePlayers"
-                            name="players"
-                            value={formdData.players}
-                            onChange={changeHandler}
+                            {...register("players")}
                             min="0"
                             placeholder="0"
                         />
@@ -114,9 +115,7 @@ export default function GameEdit() {
                         <input
                             type="date"
                             id="releaseDate"
-                            name="date"
-                            value={formdData.date}
-                            onChange={changeHandler}
+                            {...register("date")}
                         />
                     </div>
 
@@ -125,9 +124,7 @@ export default function GameEdit() {
                         <input
                             type="text"
                             id="imageUrl"
-                            name="imageUrl"
-                            value={formdData.imageUrl}
-                            onChange={changeHandler}
+                            {...register("imageUrl")}
                             placeholder="Enter image URL..."
                         />
                     </div>
@@ -136,8 +133,7 @@ export default function GameEdit() {
                         <label htmlFor="summary">Summary:</label>
                         <textarea
                             name="summary"
-                            value={formdData.summary}
-                            onChange={changeHandler}
+                            {...register("summary")}
                             id="summary"
                             rows="5"
                             placeholder="Write a brief summary..."></textarea>
