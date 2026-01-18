@@ -1,6 +1,5 @@
 import useRequest from "../../hooks/useRequest";
 import GameCard from "../game-card/GameCard";
-import Swal from "sweetalert2";
 
 export default function Home() {
 

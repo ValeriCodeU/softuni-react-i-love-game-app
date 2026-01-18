@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import request from "../../utils/request";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
 import useForm from "../../hooks/useForm";

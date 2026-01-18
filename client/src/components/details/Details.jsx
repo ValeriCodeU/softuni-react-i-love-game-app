@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
-import request from "../../utils/request";
 import CreateComment from "../create-comment/CreateComment";
 import GameDetailsComments from "../game-details-comments/GameDetailsComments";
 import useRequest from "../../hooks/useRequest";
