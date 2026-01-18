@@ -36,8 +36,12 @@ export default function Details() {
     //         })
     // }, [gameId]);
 
+    const urlParams = new URLSearchParams();
+    urlParams.append('load', 'author=_ownerId:users'); 
+    urlParams.append('where', `gameId="${gameId}"`);
+    
     useEffect(() => {
-        request('/data/comments')
+        request(`/data/comments?${urlParams.toString()}`)
             .then(result => {
                 console.log(result);
                 setComments(Object.values(result).filter(c => c.gameId === gameId));
