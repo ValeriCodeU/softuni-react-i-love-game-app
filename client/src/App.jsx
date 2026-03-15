@@ -9,13 +9,12 @@ import Register from "./components/register/Register"
 import Login from "./components/login/Login"
 import Logout from "./components/logout/Logout"
 import GameEdit from "./components/game-edit/GameEdit"
-import UserContext from "./contexts/UserContext"
-import { useContext } from "react"
+import { useUserContext } from "./contexts/UserContext"
 
 
 function App() {
 
-    const { user } = useContext(UserContext);
+    const { user } = useUserContext();
 
     console.log(import.meta.env.VITE_FIREBASE_PROJECT_ID);
 

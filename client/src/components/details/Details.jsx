@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useOptimistic, useState } from "react";
 import { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
@@ -16,8 +16,8 @@ export default function Details() {
     const { gameId } = useParams();
     const { user, isAuthenticated } = useUserContext();
     // const [gameDetails, setGameDetails] = useState({});
-    const [comments, setComments] = useState([]);
-    const [refresh, setRefresh] = useState(false);
+    // const [comments, setComments] = useState([]);
+    // const [refresh, setRefresh] = useState(false);
     const navigate = useNavigate();
     const { data: gameDetails, request } = useRequest(`/data/games/${gameId}`, {});
 
@@ -36,26 +36,97 @@ export default function Details() {
     // }, [gameId]);
 
     const urlParams = new URLSearchParams();
-    urlParams.append('load', 'author=_ownerId:users'); 
+    urlParams.append('load', 'author=_ownerId:users');
     urlParams.append('where', `gameId="${gameId}"`);
-    
-    useEffect(() => {
-        request(`/data/comments?${urlParams.toString()}`)
-            .then(result => {
-                console.log(result);
-                setComments(Object.values(result).filter(c => c.gameId === gameId));
-            })
-            .catch(err => {
-                Swal.fire({
-                    title: "❌ Error!",
-                    text: err.message,
-                });
-            })
-    }, [gameId, refresh]);
 
-    const forceRefresh = () => {
-        setRefresh(state => !state);
-    }
+
+    const { data: comments, setData: setComments } = useRequest(`/data/comments?${urlParams.toString()}`, []);
+
+
+    const [optimisticComments, dispatchOptimisticComments] = useOptimistic(
+        comments,
+        (state, action) => {
+            switch (action.type) {
+                case 'ADD_COMMENT':
+                    return [...state, action.payload];
+
+                case 'REPLACE_COMMENT':
+                    return state.map(comment =>
+                        comment._id === action.tempId
+                            ? action.payload
+                            : comment
+                    );
+
+                case 'REMOVE_COMMENT':
+                    return state.filter(comment => comment._id !== action.tempId);
+
+                default:
+                    return state;
+            }
+        }
+    );
+
+    //old version without useRequest
+    // useEffect(() => {
+    //     request(`/data/comments?${urlParams.toString()}`)
+    //         .then(result => {
+    //             console.log(result);
+    //             setComments(Object.values(result).filter(c => c.gameId === gameId));
+    //         })
+    //         .catch(err => {
+    //             Swal.fire({
+    //                 title: "❌ Error!",
+    //                 text: err.message,
+    //             });
+    //         })
+    // }, [gameId, refresh]);
+
+    // const forceRefresh = () => {
+    //     setRefresh(state => !state);
+    // }
+
+    // const createEndCommentHandler = (createdComment) => {
+    //     setComments(state => [...state, { ...createdComment, author: { email: user.email } }]);
+    // }
+
+
+    // const createStartCommentHandler = (newComment) => {
+    //     dispatchOptimisticComments({ type: 'ADD_COMMENT', payload: { ...newComment, author: { email: user.email } } });
+    // }
+
+    const createStartCommentHandler = (tempComment) => {
+        dispatchOptimisticComments({
+            type: 'ADD_COMMENT',
+            payload: tempComment,
+        });
+    };
+
+    const createEndCommentHandler = (tempId, createdComment) => {
+        const finalComment = {
+            ...createdComment,
+            author: { email: user.email },
+        };
+
+        dispatchOptimisticComments({
+            type: 'REPLACE_COMMENT',
+            tempId,
+            payload: finalComment,
+        });
+
+        setComments(state =>
+            state.some(c => c._id === finalComment._id)
+                ? state
+                : [...state, finalComment]
+        );
+    };
+
+    const createFailCommentHandler = (tempId) => {
+        dispatchOptimisticComments({
+            type: 'REMOVE_COMMENT',
+            tempId,
+        });
+    };
+
 
 
     const deleteGameHandler = async () => {
@@ -140,11 +211,17 @@ export default function Details() {
                         <button className="button" onClick={deleteGameHandler}>Delete</button>
                     </div>
                 }
-                <GameDetailsComments comments={comments} />
+                {/* <GameDetailsComments comments={comments} /> */}
+                <GameDetailsComments comments={optimisticComments} />
 
             </div>
             {isAuthenticated &&
-                <CreateComment refreshComments={forceRefresh} user={user} />}
+                // <CreateComment refreshComments={forceRefresh} user={user} />}
+                <CreateComment
+                    onCreateStart={createStartCommentHandler}
+                    onCreateEnd={createEndCommentHandler}
+                    onCreateFail={createFailCommentHandler}
+                    user={user} />}
         </section>
     );
 }

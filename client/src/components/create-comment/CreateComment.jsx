@@ -2,10 +2,14 @@ import { useParams } from "react-router";
 import Swal from "sweetalert2";
 import useRequest from "../../hooks/useRequest";
 import useForm from "../../hooks/useForm";
+import { v4 as uuid } from 'uuid';
 
 export default function CreateComment({
     user,
-    refreshComments,
+    // refreshComments,
+    onCreateStart,
+    onCreateEnd,
+    onCreateFail,
 }) {
 
     // const [comment, setComment] = useState('');
@@ -19,28 +23,47 @@ export default function CreateComment({
 
 
     const submitHandler = async (data) => {
+        const tempId = uuid();
+
+        const tempComment = {
+            _id: tempId,
+            commentText: data.comment,
+            gameId,
+            author: { email: user.email },
+            pending: true,
+        };
+
+        const commentData = {
+            commentText: data.comment,
+            gameId,
+        };
+
+        onCreateStart(tempComment);
 
         try {
-            await request('/data/comments', 'POST', {
-                // author: user.email, // jsonstore practise server
-                commentText: data.comment,
-                gameId,
-            });
+            const createdComment = await request('/data/comments', 'POST', commentData);
 
-            refreshComments();
+            // refreshComments();
             // setComment('');
+            // onCreateEnd(createdComment);
+            onCreateEnd(tempId, createdComment);
 
 
-            Swal.fire({
-                title: "✅ Success!",
-                text: `Comment has been created successfully!`,
-            });
+            //Махнато заради use optimistic update UX
+            //Няма success popup, защото optimistic UI вече показва успешното добавяне
+            // Swal.fire({
+            //     title: "✅ Success!",
+            //     text: `Comment has been created successfully!`,
+            // });
 
         } catch (err) {
+            onCreateFail(tempId);
+            
             Swal.fire({
                 title: "❌ Error!",
                 text: err.message,
             });
+
         }
 
 

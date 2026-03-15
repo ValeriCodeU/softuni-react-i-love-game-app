@@ -23,7 +23,7 @@ export default function useRequest(url, initialValues) {
             };
         }
 
-        console.log(config.accessToken);
+        // console.log(config.accessToken);
 
         if (config.accessToken || isAuthenticated) {
             options.headers = {
@@ -65,5 +65,5 @@ export default function useRequest(url, initialValues) {
             });
     }, [url]);
 
-    return { request, data }
+    return { request, data, setData }
 }
