@@ -10,6 +10,8 @@ import Login from "./components/login/Login"
 import Logout from "./components/logout/Logout"
 import GameEdit from "./components/game-edit/GameEdit"
 import { useUserContext } from "./contexts/UserContext"
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 function App() {
@@ -21,6 +23,8 @@ function App() {
     return (
         <>
             <Header />
+
+            <ToastContainer position="top-right" autoClose={3000} />
 
             <Routes>
                 <Route path="/" element={<Home />} />

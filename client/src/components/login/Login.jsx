@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import UserContext from "../../contexts/UserContext";
 import { useContext } from "react";
 import useForm from "../../hooks/useForm";
+import { toast } from "react-toastify";
 
 export default function Login() {
 
@@ -14,24 +15,27 @@ export default function Login() {
         const { email, password } = data;
 
         if (!email || !password) {
-            return Swal.fire({
-                title: "❌ Error!",
-                text: 'Email and password are required!',
-            })
+            // return Swal.fire({
+            //     title: "❌ Error!",
+            //     text: 'Email and password are required!',
+            // })
+            return toast.error("Email and password are required!");
         }
 
         try {
 
             await loginHandler(email, password);
+            toast.success("Login successful!");
 
             navigate('/');
 
         } catch (error) {
 
-            Swal.fire({
-                title: "❌ Error!",
-                text: error.message,
-            })
+            // Swal.fire({
+            //     title: "❌ Error!",
+            //     text: error.message,
+            // })
+            toast.error(`Error: ${error.message}`);
         }
 
     }
